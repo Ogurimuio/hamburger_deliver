@@ -11,11 +11,11 @@
 </template>
 
 <script>
-import Tab from './Tab';
-import List from './List';
-import Dish from './Dish';
-import Connect from './Connect';
-import Total from './Total';
+import Tab from './Tab'
+import List from './List'
+import Dish from './Dish'
+import Connect from './Connect'
+import Total from './Total'
 
 export default {
   name: 'Main',
@@ -29,18 +29,18 @@ export default {
   data () {
     return {
       chooseList: [],
-      price: 0,
+      price: 0
     }
   },
   methods: {
-    addHandler(item) {
-      this.chooseList.push(item);
-      this.price = this.price + item.price;
+    addHandler (item) {
+      this.chooseList.push(item)
+      this.price = this.price + item.price
     },
 
-    payHandler() {
-      this.chooseList = [];
-      this.price = 0;
+    payHandler () {
+      this.chooseList = []
+      this.price = 0
     }
   }
 }

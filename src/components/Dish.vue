@@ -15,9 +15,8 @@
 </template>
 
 <script>
-import Tab from './Tab';
-import List from './List';
-
+import Tab from './Tab'
+import List from './List'
 
 export default {
   name: 'Dish',
@@ -26,18 +25,18 @@ export default {
     List
   },
   props: {
-    list: [],
+    list: []
   },
   data () {
     return {
     }
   },
   computed: {
-    countType() {
-      if (this.list.length == 2) {
-        return 'two-type';
+    countType () {
+      if (this.list.length === 2) {
+        return 'two-type'
       }
-      return 'one-type';
+      return 'one-type'
     }
   }
 }

@@ -21,19 +21,19 @@ export default {
       tabList: [{
         value: 1,
         className: 'tab-item__img-home',
-        url: require('../assets/tab_home.png'),
+        url: require('../assets/tab_home.png')
       }, {
         value: 2,
         className: 'tab-item__img-burger',
-        url: require('../assets/tab_burger.png'),
+        url: require('../assets/tab_burger.png')
       }, {
         value: 3,
         className: 'tab-item__img-drink',
-        url: require('../assets/tab_drink.png'),
+        url: require('../assets/tab_drink.png')
       }, {
         value: 4,
         className: 'tab-item__img-snack',
-        url: require('../assets/tab_snack.png'),
+        url: require('../assets/tab_snack.png')
       }]
     }
   }

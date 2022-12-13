@@ -11,15 +11,15 @@ export default {
   components: {
   },
   props: {
-    price: 0,
+    price: 0
   },
   data () {
     return {
     }
   },
   methods: {
-    pay() {
-      this.$emit('pay');
+    pay () {
+      this.$emit('pay')
     }
   }
 }

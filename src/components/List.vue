@@ -23,7 +23,7 @@
         </div>
       </div>
     </div>
-  
+
     <div class="info">
       <div class="info-name" :class="{'active': infoActive}">{{ listInfo[curIndex].name }}</div>
       <div class="info-price">{{ listInfo[curIndex].price }}$</div>
@@ -36,37 +36,37 @@
 const STAR_LARGE_POSITION = {
   0: 'top: 0px; left: 160px',
   1: 'top: 170px; left: 140px',
-  2: 'top: 130px; left: 20px',
-};
+  2: 'top: 130px; left: 20px'
+}
 const STAR_MEDIUM_POSITION = {
   0: 'top: 80px; left: 200px',
   1: 'top: 180px; left: 40px',
-  2: 'top: 20px; left: 40px',
-};
+  2: 'top: 20px; left: 40px'
+}
 const STAR_SMALL_POSITION = {
   0: 'top: 110px; left: 20px',
   1: 'top: 50px; left: 160px',
-  2: 'top: 200px; left: 160px',
-};
+  2: 'top: 200px; left: 160px'
+}
 const LIST_INFO = [{
   value: 'chips',
   name: 'FRIES',
   price: 4,
   dishImg: require('../assets/dish_chips.png'),
-  dishSize: 94,
+  dishSize: 94
 }, {
   value: 'coffee',
   name: 'LATTE',
   price: 3,
   dishImg: require('../assets/dish_coffee.png'),
-  dishSize: 128,
+  dishSize: 128
 }, {
   value: 'burger',
   name: 'BURGER',
   price: 6,
   dishImg: require('../assets/dish_burger.png'),
-  dishSize: 101,
-}];
+  dishSize: 101
+}]
 
 export default {
   name: 'List',
@@ -76,62 +76,62 @@ export default {
       curScrollLeft: 0,
       listInfo: LIST_INFO,
       width: 0,
-      infoActive: false,
+      infoActive: false
     }
   },
-  mounted() {
-    this.width = this.$refs.photoView.clientWidth;
-    console.log('width', this.$refs.photoView);
+  mounted () {
+    // 更新客户端宽度
+    this.width = this.$refs.photoView.clientWidth
   },
   methods: {
-    getStarPostion(type) {
-      const { curIndex } = this;
-      if (type == 'large') {
-        return STAR_LARGE_POSITION[curIndex];
+    getStarPostion (type) {
+      const { curIndex } = this
+      if (type === 'large') {
+        return STAR_LARGE_POSITION[curIndex]
       }
-      if (type == 'medium') {
-        return STAR_MEDIUM_POSITION[curIndex];
+      if (type === 'medium') {
+        return STAR_MEDIUM_POSITION[curIndex]
       }
-      if (type == 'small') {
-        return STAR_SMALL_POSITION[curIndex];
+      if (type === 'small') {
+        return STAR_SMALL_POSITION[curIndex]
       }
     },
-    activeInfo() {
-      this.infoActive = true;
+    activeInfo () {
+      this.infoActive = true
       setTimeout(() => {
-        this.infoActive = false;
-      }, 10);
+        this.infoActive = false
+      }, 10)
     },
-    scrollNext() {
-      this.curIndex = this.curIndex + 1;
-      const newScrollLeft = this.width * this.curIndex;
-      this.$refs.photoList.scrollTo({ left: newScrollLeft });
-      this.curScrollLeft = newScrollLeft;
-      this.activeInfo();
+    scrollNext () {
+      this.curIndex = this.curIndex + 1
+      const newScrollLeft = this.width * this.curIndex
+      this.$refs.photoList.scrollTo({ left: newScrollLeft })
+      this.curScrollLeft = newScrollLeft
+      this.activeInfo()
     },
-    scrollPre() {
-      this.curIndex = this.curIndex - 1;
-      const newScrollLeft = this.width * this.curIndex;
-      this.$refs.photoList.scrollTo({ left: newScrollLeft });
-      this.curScrollLeft = newScrollLeft;
-      this.activeInfo();
+    scrollPre () {
+      this.curIndex = this.curIndex - 1
+      const newScrollLeft = this.width * this.curIndex
+      this.$refs.photoList.scrollTo({ left: newScrollLeft })
+      this.curScrollLeft = newScrollLeft
+      this.activeInfo()
     },
-    scrollHandler() {
-      const { scrollLeft } = this.$refs.photoList;
-      const { width } = this;
-      if (Math.abs(scrollLeft - this.curScrollLeft) == this.width) {
-        return;
+    scrollHandler () {
+      const { scrollLeft } = this.$refs.photoList
+      const { width } = this
+      const widthLimit = 150;
+      if (Math.abs(scrollLeft - this.curScrollLeft) === width) {
+        return
       }
-      if (scrollLeft - this.curScrollLeft > 150) {
-        this.scrollNext();
-      }
-      else if (this.curScrollLeft - scrollLeft > 150) {
-        this.scrollPre();
+      if (scrollLeft - this.curScrollLeft > widthLimit) {
+        this.scrollNext()
+      } else if (this.curScrollLeft - scrollLeft > widthLimit) {
+        this.scrollPre()
       }
     },
-    add() {
-      this.$emit('add', LIST_INFO[this.curIndex]);
-    },
+    add () {
+      this.$emit('add', LIST_INFO[this.curIndex])
+    }
   }
 }
 </script>
