@@ -6,47 +6,72 @@
       <div class="star star_small" :style="getStarPostion('small')"></div>
 
       <div class="photo-list" ref="photoList" @scroll="scrollHandler">
-        <div class="chip" :class="{ hide: curIndex !== 0 }">
+        <div class="chip" :class="{ active: curIndex == 0 }">
           <img class="chip-sub_1" src="../assets/chip_1.png" />
           <img class="chip-sub_2" src="../assets/chip_2.png" />
           <img class="chip-main" src="../assets/chips.png" />
+          <div class="info">
+            <AnimateInfo
+              :trigger="curIndex == 0 && !scrolling"
+              :name="listInfo[curIndex].name"
+              :price="listInfo[curIndex].price"
+              @add="add"
+            />
+            <div class="info-add" @click="add"></div>
+          </div>
         </div>
 
-        <div class="coffee">
-          <img v-if="curIndex === 1" class="coffee-sub" src="../assets/coffee_sub.png" />
+        <div class="coffee" :class="{ active: curIndex === 1 }">
+          <img class="coffee-sub" src="../assets/coffee_sub.png" />
           <img class="coffee-main" src="../assets/coffee.png" />
+
+          <div class="info">
+            <AnimateInfo
+              :trigger="curIndex == 1 && !scrolling"
+              :name="listInfo[curIndex].name"
+              :price="listInfo[curIndex].price"
+              @add="add"
+            />
+            <div class="info-add" @click="add"></div>
+          </div>
         </div>
 
         <div class="burger" :class="{ active: curIndex === 2 }">
           <img class="burger-sub" src="../assets/burger_top.png" />
           <img class="burger-main" src="../assets/burger_bottom.png" />
+
+          <div class="info">
+            <AnimateInfo
+              :trigger="curIndex == 2 && !scrolling"
+              :name="listInfo[curIndex].name"
+              :price="listInfo[curIndex].price"
+              @add="add"
+            />
+            <div class="info-add" @click="add"></div>
+          </div>
         </div>
       </div>
-    </div>
-
-    <div class="info">
-      <div class="info-name" :class="{'active': infoActive}">{{ listInfo[curIndex].name }}</div>
-      <div class="info-price">{{ listInfo[curIndex].price }}$</div>
-      <div class="info-add" @click="add"></div>
     </div>
   </div>
 </template>
 
 <script>
+import AnimateInfo from './AnimateInfo'
+
 const STAR_LARGE_POSITION = {
   0: 'top: 0px; left: 160px',
-  1: 'top: 170px; left: 140px',
+  1: 'top: 160px; left: 170px',
   2: 'top: 130px; left: 20px'
 }
 const STAR_MEDIUM_POSITION = {
   0: 'top: 80px; left: 200px',
   1: 'top: 180px; left: 40px',
-  2: 'top: 20px; left: 40px'
+  2: 'top: 10px; left: 40px'
 }
 const STAR_SMALL_POSITION = {
   0: 'top: 110px; left: 20px',
-  1: 'top: 50px; left: 160px',
-  2: 'top: 200px; left: 160px'
+  1: 'top: 50px; left: 210px',
+  2: 'top: 180px; left: 180px'
 }
 const LIST_INFO = [{
   value: 'chips',
@@ -67,13 +92,20 @@ const LIST_INFO = [{
   dishImg: require('../assets/dish_burger.png'),
   dishSize: 101
 }]
+let timer = null
 
 export default {
   name: 'List',
+  components: {
+    AnimateInfo
+  },
   data () {
     return {
       curIndex: 0,
+      starIndex: 0,
       curScrollLeft: 0,
+      scrollLimit: false,
+      scrolling: false,
       listInfo: LIST_INFO,
       width: 0,
       infoActive: false
@@ -85,15 +117,15 @@ export default {
   },
   methods: {
     getStarPostion (type) {
-      const { curIndex } = this
+      const { starIndex } = this
       if (type === 'large') {
-        return STAR_LARGE_POSITION[curIndex]
+        return STAR_LARGE_POSITION[starIndex % 3]
       }
       if (type === 'medium') {
-        return STAR_MEDIUM_POSITION[curIndex]
+        return STAR_MEDIUM_POSITION[starIndex % 3]
       }
       if (type === 'small') {
-        return STAR_SMALL_POSITION[curIndex]
+        return STAR_SMALL_POSITION[starIndex % 3]
       }
     },
     activeInfo () {
@@ -102,24 +134,51 @@ export default {
         this.infoActive = false
       }, 10)
     },
+    limitScroll () {
+      // 自动滚动到下一个产品后，防止用户滚动导致偏移
+      this.scrollLimit = true
+      setTimeout(() => {
+        this.scrollLimit = false
+      }, 1000)
+    },
     scrollNext () {
       this.curIndex = this.curIndex + 1
       const newScrollLeft = this.width * this.curIndex
       this.$refs.photoList.scrollTo({ left: newScrollLeft })
       this.curScrollLeft = newScrollLeft
+      this.scrolling = false
       this.activeInfo()
+      this.limitScroll()
     },
     scrollPre () {
       this.curIndex = this.curIndex - 1
       const newScrollLeft = this.width * this.curIndex
       this.$refs.photoList.scrollTo({ left: newScrollLeft })
       this.curScrollLeft = newScrollLeft
+      this.scrolling = false
       this.activeInfo()
+      this.limitScroll()
+    },
+    // 滚动时启动动画
+    scrollActive () {
+      if (!timer) {
+        const { scrollLeft } = this.$refs.photoList
+        this.starIndex = scrollLeft > this.curScrollLeft ? this.starIndex + 1 : this.starIndex - 1
+        this.scrolling = true
+        timer = setTimeout(() => {
+          timer = null
+        }, 1500)
+        this.preIndex = this.curIndex
+      }
     },
     scrollHandler () {
+      if (this.scrollLimit) {
+        this.$refs.photoList.scrollTo({ left: this.curScrollLeft })
+      }
       const { scrollLeft } = this.$refs.photoList
       const { width } = this
-      const widthLimit = 150;
+      const widthLimit = 150
+      this.scrollActive()
       if (Math.abs(scrollLeft - this.curScrollLeft) === width) {
         return
       }
@@ -161,7 +220,7 @@ export default {
   position: absolute;
   background-image: url('../assets/star.png');
   background-size: contain;
-  transition: all .5s ease-in;
+  transition: all 1s ease-in;
 }
 .star_large {
   width: 25px;
@@ -181,7 +240,7 @@ export default {
 .burger {
   position: relative;
   width: 100%;
-  height: 200px;
+  height: 250px;
   flex-shrink: 0;
 }
 .chip-sub_1,
@@ -190,97 +249,78 @@ export default {
   position: absolute;
   width: 200px;
   height: 200px;
-  transition: all 1s linear;
+  left: 10px;
+  transition: all .5s linear;
 }
 .chip-sub_1 {
-  top: -75.5px;
-  left: 32.3px;
+  top: 0;
+  left: 33px;
 }
 .chip-sub_2 {
-  top: -33.8px;
-  left: 0;
+  top: 0px;
+  left: 30px;
 }
 .active .chip-sub_1 {
-  top: -75.5px;
-  left: 32.3px;
+  top: -77px;
 }
 .active .chip-sub_2 {
-  top: -33.8px;
+  top: -50px;
   left: 0;
-}
-.chip-main {
-  left: 20px;
 }
 
 .coffee-main {
   position: absolute;
-  left: 20px;
-  width: 230px;
-  height: 240px;
+  top: -10px;
+  width: 260px;
+  height: 280px;
+  transform: rotate(15deg);
+  transition: all .5s ease;
 }
 .coffee-sub {
   position: absolute;
-  width: 230px;
-  height: 230px;
-  left: 9px;
-  top: -57px;
+  width: 250px;
+  height: 250px;
+  left: -10px;
+  top: -65px;
   z-index: 99;
+  opacity: 0;
+  transform: scale(0);
+  transition: all .5s ease;
+}
+.active .coffee-main {
+  transform: rotate(0);
+}
+.active .coffee-sub {
+  opacity: 1;
+  transform: scale(1);
 }
 
-.burger {
-  top: 20px;
-}
 .burger-main {
   position: absolute;
+  top: 20px;
   left: 30px;
   width: 170px;
   height: 171px;
 }
 .burger-sub {
   position: absolute;
-  top: -30px;
+  top: 0;
   left: 50px;
   width: 130px;
   height: 129px;
   z-index: 99;
-  transition: all .5s ease-in;
+  transition: all .3s ease-in;
 }
 .active .burger-sub {
-  top: -40px;
+  top: -20px;
 }
 
 .info {
   position: absolute;
   right: 0;
-  margin: 75px 35px 0 0;
-  width: 150px;
+  margin: 10px 35px 0 0;
   display: flex;
   flex-flow: column;
   align-items: end;
-}
-.info .active {
-  top: 30px;
-}
-.info-name {
-  margin-right: 16px;
-  font-weight: 600;
-  font-size: 32px;
-  color: #EB5C77;
-  text-align: right;
-}
-.info-price {
-  margin: 6px 16px 0 0;
-  font-weight: 300;
-  font-size: 24px;
-  line-height: 16px;
-  color: #EB5C77;
-  text-align: right;
-}
-.info-add {
-  margin-top: 49px;
-  width: 109px;
-  height: 109px;
-  background-image: url('../assets/add.png');
-  background-size: contain;
 }
 </style>
