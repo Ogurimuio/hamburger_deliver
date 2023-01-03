@@ -25,10 +25,11 @@ export default {
   position: fixed;
   bottom: 65px;
   height: 62px;
+  width: 100%;
   display: flex;
-  padding: 0 32px 0 22px;
 }
 .location {
+  margin-left: 22px;
   width: 25px;
   height: 33.8px;
   background-image: url('../assets/location.png');
@@ -42,6 +43,7 @@ export default {
   line-height: 16px;
 }
 .phone {
+  margin-right: 32px;
   width: 33px;
   height: 33px;
   background-image: url('../assets/phone.png');

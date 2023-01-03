@@ -113,11 +113,20 @@ export default {
   },
   mounted () {
     // 更新客户端宽度
-    this.width = this.$refs.photoView.clientWidth
+    this.updateWidth()
+    window.onresize = () => {
+      this.updateWidth()
+      this.$forceUpdate()
+    }
   },
   methods: {
+    updateWidth () {
+      const MAX_WIDTH = 500
+      const clientWidth = this.$refs.photoView.clientWidth
+      this.width = clientWidth > MAX_WIDTH ? MAX_WIDTH : clientWidth
+    },
     getStarPostion (type) {
-      const { starIndex } = this
+      const { curIndex: starIndex } = this
       if (type === 'large') {
         return STAR_LARGE_POSITION[starIndex % 3]
       }
@@ -206,6 +215,7 @@ export default {
   position: relative;
   width: 100%;
   height: 200px;
+  max-width: 500px;
 }
 .photo-view ::-webkit-scrollbar {
   display: none;
