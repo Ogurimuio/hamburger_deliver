@@ -126,7 +126,7 @@ export default {
       this.width = clientWidth > MAX_WIDTH ? MAX_WIDTH : clientWidth
     },
     getStarPostion (type) {
-      const { curIndex: starIndex } = this
+      const { starIndex } = this
       if (type === 'large') {
         return STAR_LARGE_POSITION[starIndex % 3]
       }
@@ -252,6 +252,7 @@ export default {
   width: 100%;
   height: 250px;
   flex-shrink: 0;
+  overflow: hidden;
 }
 .chip-sub_1,
 .chip-sub_2,
@@ -260,6 +261,7 @@ export default {
   width: 200px;
   height: 200px;
   left: 10px;
+  top: 20px;
   transition: all .5s linear;
 }
 .chip-sub_1 {
@@ -267,14 +269,14 @@ export default {
   left: 33px;
 }
 .chip-sub_2 {
-  top: 0px;
+  top: 0;
   left: 30px;
 }
 .active .chip-sub_1 {
-  top: -77px;
+  top: -65px;
 }
 .active .chip-sub_2 {
-  top: -50px;
+  top: -40px;
   left: 0;
 }
 
@@ -307,14 +309,14 @@ export default {
 
 .burger-main {
   position: absolute;
-  top: 20px;
+  top: 40px;
   left: 30px;
   width: 170px;
   height: 171px;
 }
 .burger-sub {
   position: absolute;
-  top: 0;
+  top: 20px;
   left: 50px;
   width: 130px;
   height: 129px;
@@ -322,7 +324,7 @@ export default {
   transition: all .3s ease-in;
 }
 .active .burger-sub {
-  top: -20px;
+  top: -10px;
 }
 
 .info {
