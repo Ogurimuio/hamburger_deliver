@@ -112,14 +112,20 @@ export default {
     }
   },
   mounted () {
-    // 更新客户端宽度
-    this.updateWidth()
+    this.init()
     window.onresize = () => {
-      this.updateWidth()
-      this.$forceUpdate()
+      this.init()
     }
   },
   methods: {
+    init () {
+      this.curIndex = 0
+      this.starIndex = 0
+      this.curScrollLeft = 0
+      this.$refs.photoList.scrollTo({ left: 0 })
+      this.updateWidth()
+    },
+    // 更新客户端宽度
     updateWidth () {
       const MAX_WIDTH = 500
       const clientWidth = this.$refs.photoView.clientWidth
